@@ -1,0 +1,24 @@
+{% extends 'admin/base_site.html' %}
+{% block content %}
+  <h1>{{ title }}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Sản phẩm</th>
+        <th>Số lượng bán</th>
+        <th>Doanh thu</th>
+        <th>Lợi nhuận</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in sales_data %}
+        <tr>
+          <td>{{ data.product.name }}</td>
+          <td>{{ data.total_sold }}</td>
+          <td>{{ data.total_revenue|floatformat:2 }}</td>
+          <td>{{ data.profit|floatformat:2 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

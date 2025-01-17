@@ -1,0 +1,64 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block supplier_dashboard %}
+<section class="vh-100 bg-image" 
+  style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+              <h2 class="text-uppercase text-center mb-5">Thông tin các sản phẩm</h2>
+              <a class="btn btn-outline-dark" href="{% url 'add_product' %}"> Thêm </a>
+
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Tên</th>
+                      <th>Loại sản phẩm</th>
+                      <th>Giá</th>
+                      <th>Mô tả</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.description }}</td>
+                        <td>
+                            <!-- Form xóa sản phẩm -->
+                            <form action="{% url 'delete_product' %}" method="POST" 
+                                  onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');" 
+                                  style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                <button type="submit" style="color: red;">Xóa</button>
+                            </form>
+
+                            <!-- Form sửa sản phẩm (POST để lưu vào session) -->
+                            <form action="{% url 'edit_product' %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                <button type="submit" style="color: blue;">Sửa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <a href="{% url 'logout' %}" class="btn btn-danger">Đăng Xuất</a>
+
+              </div>
+                          
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock supplier_dashboard %}
+

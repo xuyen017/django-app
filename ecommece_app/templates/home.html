@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+{% if messages %}
+    <div id="cart-message" class="alert alert-success" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+
+    <!-- Thêm JS để tự động ẩn thông báo sau 2s -->
+    <script type="text/javascript">
+        setTimeout(function() {
+            var message = document.getElementById('cart-message');
+            if (message) {
+                message.style.display = 'none';
+            }
+        }, 3000); // Thời gian tắt sau 2 giây
+    </script>
+{% endif %}
+{% block banner_slide %}
+<div id="carouselExampleDark" class="carousel carousel-dark slide ">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="10000">
+            <img src="{% static 'app/images/banner/b1.jpg' %}" class="d-block w-100 img--fluid" alt="Banner 1">
+            
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+            <img src="{% static 'app/images/banner/b2.jpg' %}" class="d-block w-100" alt="Banner 2">
+
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'app/images/banner/b3.jpg' %}" class="d-block w-100" alt="Banner 3">
+
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'app/images/banner/b4.jpg' %}" class="d-block w-100" alt="Banner 4">
+
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+{% endblock banner_slide %}
+
+{% block main-body %}
+{% if messages %}
+<div id="alert-message" class="alert alert-danger" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 80%; max-width: 600px; text-align: center;">
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="row" style="width:100%">
+    {% for product in products %}
+    <div class="col-lg-4">
+        <!-- Hiển thị ảnh chính -->
+        <img class="thumbnailhome" src="{{ product.main_image_url }}" alt="{{ product.name }}">
+
+        <div class="box-element product">
+            <h6><strong>Sản phẩm: {{ product.name }}</strong></h6>
+            <p>Mô tả: {{ product.description|truncatechars:100 }}</p>
+            <hr>
+
+            <!-- Form gửi dữ liệu POST -->
+            <form method="POST" action="{% url 'add_to_cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                <button type="submit" class="btn btn-outline-secondary add-btn">Thêm vào giỏ hàng</button>
+            </form>
+
+            <a class="btn btn-outline-success" href="{% url 'products' %}?product_id={{ product.product_id }}">Xem</a>
+            <h4 style="display: inline-block; float: right"><strong>Giá: {{ product.price|floatformat:0 }} đ</strong></h4>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<br/><br/>
+{% block extra_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertMessage = document.getElementById('alert-message');
+            if (alertMessage) {
+                setTimeout(() => {
+                    alertMessage.style.transition = 'opacity 0.5s ease';
+                    alertMessage.style.opacity = '0'; // Làm mờ dần
+                    setTimeout(() => alertMessage.remove(), 500); // Xóa khỏi DOM sau khi mờ
+                }, 3000);
+            }
+        });
+    </script>
+{% endblock %}
+{% endblock %}

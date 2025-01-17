@@ -1,0 +1,21 @@
+<form method="POST">
+    {% csrf_token %}
+    <label>Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Category:</label>
+    <select name="category" required>
+        <option value="" disabled selected>Chọn loại sản phẩm</option>  <!-- Giá trị mặc định -->
+        {% for category in categories %}
+            <option value="{{ category.category_id }}">{{ category.category_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Description:</label>
+    <textarea name="description" required></textarea>
+
+    <label>Price:</label>
+    <input type="number" step="0.01" name="price" required>
+
+    <button type="submit">Add Product</button>
+</form>

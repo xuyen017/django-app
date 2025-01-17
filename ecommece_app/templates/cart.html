@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block cart_content %}
+<div class="row" style="width:100%">
+    <div class="col-lg-12">
+        {% csrf_token %}
+                    <!-- Hiển thị thông báo lỗi -->
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'home' %}">&#x2190; Tiếp tục mua </a>
+            <br><br>
+            <table class="table">
+                <tr>
+                    <h5>Tổng số lượng sản phẩm: {{ total_quantity }}</h5>
+                    <th><h5>Tổng tiền: <strong> {{ total|floatformat:0 }} đ</strong></h5></th>
+                   <!-- Button Checkout trong cart.html -->
+                    <th>
+                        <a style="float:right; margin:5px;" class="btn btn-success"
+                        href="{% if request.session.email %}{% url 'checkout' %}{% else %}{% url 'checkout' %}{% endif %}">Đặt hàng</a>
+                    </th>
+                    
+                </tr>
+            </table>
+        </div>
+
+        <br>
+        <div class="box-element">
+            <div class="cart-row">
+                <div style="flex:3"><strong>Ảnh</strong></div>
+                <div style="flex:2"><strong>Sản Phẩm</strong></div>
+                <div style="flex:1"><strong>Giá</strong></div>
+                <div style="flex:1"><strong>Số lượng</strong></div>
+                <div style="flex:1"><strong>Tổng tiền</strong></div>
+            </div>
+
+            {% for item in items %}
+            <div class="cart-row">
+                <div style="flex:3">
+                    <img class="thumbnail" src="{{ item.product.main_image_url }}" alt="{{ item.product.name }}">
+                </div>
+                <div style="flex:2"><p>{{ item.product.name }}</p></div>
+                <div style="flex:1"><p>{{ item.product.price|floatformat:0 }} đ</p></div>
+                <div style="flex:1">
+                    <form method="POST" action="{% url 'update_cart' %}">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="0" class="quantity-input">
+                        <input type="hidden" name="product_id" value="{{ item.product.product_id }}">
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </form>
+                </div>
+                
+                
+                <div style="flex:1"><p>{{ item.total|floatformat:0 }} đ</p></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock cart_content %}
+

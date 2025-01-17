@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block products %}
+<div class="containerpro">
+    <div class="row">
+        <!-- Hiển thị hình ảnh chính -->
+        <div class="col-lg-6">
+            {% for image in images %}
+                {% if image.is_main %}
+                    <img class="main-image" src="{{ image.image.url }}" alt="{{ product.name }}">
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Hiển thị ảnh phụ -->
+        <div class="col-lg-6">
+            <div class="row">
+                {% for image in images %}
+                    {% if not image.is_main %}
+                        <div class="col-4">
+                            <img class="thumbnailpro" src="{{ image.image.url }}" alt="{{ product.name }}">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Hiển thị thông tin sản phẩm -->
+        <div class="col-lg-6">
+            <h2>Têm sản phẩm: {{ product.name }}</h2>
+            <p>Mô tả:{{ product.description }}</p>
+            <h4>Giá: {{ product.price|floatformat:2 }} đ</h4>
+            <p>Trong kho: {{ product.available_stock }}</p>
+
+            <hr>
+
+            <!-- Form gửi dữ liệu POST -->
+            <form method="POST" action="{% url 'add_to_cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                <button type="submit" class="btn btn-outline-secondary add-btn">Thêm vào giỏ hàng</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock products %}

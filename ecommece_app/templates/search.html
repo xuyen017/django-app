@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block search %}
+    <h1>Kết quả tìm kiếm cho: "{{ query }}"</h1>
+    <div class="row" style="width:100%">
+        {% for product in products %}
+        <div class="col-lg-4">
+            <!-- Hiển thị ảnh chính -->
+            <img class="thumbnailhome" src="{{ product.main_image_url }}" alt="{{ product.name }}">
+    
+            <div class="box-element product">
+                <h6><strong>Sản phẩm: {{ product.name }}</strong></h6>
+                <p>Mô tả: {{ product.description|truncatechars:100 }}</p>
+                <hr>
+    
+                <!-- Form gửi dữ liệu POST -->
+                <form method="POST" action="{% url 'add_to_cart' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                    <button type="submit" class="btn btn-outline-secondary add-btn">Thêm vào giỏ hàng</button>
+                </form>
+    
+                <a class="btn btn-outline-success" href="{% url 'products' %}?product_id={{ product.product_id }}">Xem</a>
+                <h4 style="display: inline-block; float: right"><strong>Giá: {{ product.price|floatformat:0 }} $</strong></h4>
+            </div>
+        </div>
+        {% empty %}
+            <p>Không có sản phẩm nào phù hợp với từ khóa tìm kiếm của bạn.</p>
+        {% endfor %}
+    </div>
+{% endblock search %}

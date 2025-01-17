@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block order %}
+<section class="vh-100 bg-image"
+  style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9  col-lg-9 col-xl-12">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-5">
+              <h2 class="text-uppercase text-center mb-5">Thông tin đơn hàng</h2>
+
+              <!-- Hiển thị thông tin khách hàng -->
+              <div class="row mb-4">
+                <div class="col-sm-3">
+                    <p class="mb-0">Tên</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">{{ customer.name }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row mb-4">
+                <div class="col-sm-3">
+                    <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">{{ customer.email }}</p>
+                </div>
+              </div>
+
+              <h4 class="text-center">Danh sách đơn hàng</h4>
+
+              <!-- Hiển thị danh sách đơn hàng -->
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Mã đơn</th>
+                      <th>Sản phẩm</th>
+                      <th>Số lượng</th>
+                      <th>Giá</th>
+                      <th>Ngày đặt</th>
+                      <th>Trạng thái</th>
+                      <th>Địa chỉ</th>
+                      <th>Yêu câu</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for order in orders %}
+                    <tr>
+                      <td>{{ order.order_id }}</td>
+                      <td>
+                        {% for item in order.order_details.all %}
+                          {{ item.product.name }} ({{ item.quantity }} x {{ item.product.price }}) <br>
+                        {% endfor %}
+                      </td>
+                      <td>{{ order.get_cart_product }}</td>
+                      <td>{{ order.total_amount }}</td>
+                      <td>{{ order.order_date }}</td>
+                      <td>{{ order.get_status_display }}</td>
+                      <td>{{ order.shipping_address }}</td>
+                      <td>
+                        {% if order.status == 'pending' %}
+                          <form method="POST" action="{% url 'order_view' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                            <button type="submit" class="btn btn-danger">Hủy đơn</button>
+                          </form>
+                        {% endif %}
+                        {% if order.status == 'completed' %}
+                          <form method="POST" action="{% url 'order_view' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                            <button type="submit" class="btn btn-danger">Hoàn đơn</button>
+                          </form>
+                        {% endif %}
+                        
+                      </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="7" class="text-center">Không có đơn hàng nào</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock order %}

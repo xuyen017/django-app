@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content_checkout %}
+<div class="row" style="width:100%">
+    <div class="col-lg-6">
+        <div class="box-element" id="form-wrapper">
+            <h5>Thông tin giao hàng</h5>
+            <hr>
+            <!-- Hiển thị thông tin khách hàng -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Tên</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{ customer.name }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Số điện thoại</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{ customer.phone }}</p>
+                    </div>
+                </div>
+                <hr>
+                <!-- Form chỉnh sửa thông tin giao hàng -->
+                <form method="POST" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <!-- Hiển thị thông báo lỗi -->
+                    {% if messages %}
+                        <div class="alert alert-danger">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Trường chỉnh sửa địa chỉ -->
+                    <div class="form-outline mb-4">
+                        <input type="text" name="address" id="form-address" class="form-control form-control-lg" value="{{ customer.address }}" required />
+                        <label class="form-label" for="form-address">Địa chỉ</label>
+                    </div>
+
+                    <!-- Phương thức thanh toán -->
+                    <div class="form-outline mb-4">
+                        <label for="payment_method">Phương thức thanh toán</label>
+                        <select class="form-control" name="payment_method" required>
+                            {% for payment in payment_methods %}
+                            <option value="{{ payment.payment_id }}" {% if payment.payment_id == order.payment_method.payment_id %}selected{% endif %}>
+                                {{ payment.get_payment_name_display }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Nút đặt hàng -->
+                    <input id="form-button" class="btn btn-success btn-block" type="submit" value="Đặt hàng">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Quay lại giỏ hàng</a>
+            <hr>
+            <h3>Tóm tắt đơn hàng</h3>
+            <hr>
+            {% for item in items %}
+            <div class="cart-row">
+                <div style="flex:2">
+                    <img class="row-image" src="{{ item.product.main_image_url }}" alt="{{ item.product.name }}">
+                </div>
+                <div style="flex:2">
+                    <p>{{ item.product.name }}</p>
+                </div>
+                <div style="flex:1">
+                    <p>Đ{{ item.product.price }}</p>
+                </div>
+                <div style="flex:1">
+                    <p>{{ item.quantity }}</p>
+                </div>
+                <div style="flex:1">
+                    <p>Tổng: Đ{{ item.total }}</p>
+                </div>
+            </div>
+            {% endfor %}
+            <h5>Tổng số lượng sản phẩm: {{ total_quantity }}</h5>
+            <h5>Tổng tiền: Đ{{ cart_total }}</h5>
+        </div>
+    </div>
+</div>
+{% endblock content_checkout %}

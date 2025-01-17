@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block bank_qr %}
+<div class="row" style="width:100%">
+    <div class="col-lg-12">
+        <div class="box-element">
+            <h3>Thanh toán bằng QR</h3>
+            <p>Vui lòng quét mã QR dưới đây để thanh toán đơn hàng</p>
+            <h5>Tổng tiền: <strong> {{ total|floatformat:0 }} đ</strong></h5>
+
+            <br><br>
+            <div class="box-element">
+                <img src="{% static 'app/images/banner/qr.pnggit init' %}" class="d-block w-100 img-fluid" alt="QR Code">
+            </div>
+            <br>
+            <a href="{% url 'home' %}" class="btn btn-primary">Quay về trang chủ</a>
+        </div>
+    </div>
+</div>
+{% endblock bank_qr %}
+
