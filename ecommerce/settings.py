@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import dj_database_url
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--f2k+48^i71d4t6!&yc!@l%upqfvx(iii^=266+zi^(*n^zddb'
+# SECRET_KEY = 'django-insecure--f2k+48^i71d4t6!&yc!@l%upqfvx(iii^=266+zi^(*n^zddb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# DEBUG = True
+# ALLOWED_HOSTS = []
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = os.environ.get("DEBUG", "False").lower() == "True"
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -79,37 +82,22 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 #==============may==============
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'ecomdata',  # Tên database của bạn
-#         'USER': 'postgres',      # Tên user
-#         'PASSWORD': '010701',  # Mật khẩu mới
-#         'HOST': 'localhost',  # Hoặc IP của database
-#         'PORT': '5432',       # Port mặc định PostgreSQL
-#     }
-# }
-# ==============deloy==================
-import os
-from urllib.parse import urlparse
-
-# Lấy DATABASE_URL từ biến môi trường (hoặc cấu hình trực tiếp)
-# DATABASE_URL = os.getenv('DATABASE_URL', 'postgres://xuyen:muYCBPILLxeShUoj4VmBHPLj5D3gebmH@dpg-cu552kij1k6c73alaah0-a:5432/ecomdata_mslg')
-
-# Phân tích DATABASE_URL để lấy thông tin kết nối
-# url = urlparse(DATABASE_URL)
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecomdata_mslg',  # Tên database
-        'USER': 'xuyen',  # Tên người dùng
-        'PASSWORD': 'muYCBPILLxeShUoj4VmBHPLj5D3gebmH',  # Thay thế bằng mật khẩu bạn nhận từ Render
-        'HOST': 'dpg-cu552kij1k6c73alaah0-a',  # Tên máy chủ
-        'PORT': '5432',  # Cổng kết nối
+        'NAME': 'ecomdata',  # Tên database của bạn
+        'USER': 'postgres',      # Tên user
+        'PASSWORD': '010701',  # Mật khẩu mới
+        'HOST': 'localhost',  # Hoặc IP của database
+        'PORT': '5432',       # Port mặc định PostgreSQL
     }
 }
-# Password validation
+# ==============deloy==================
+database_url = os.environ.get("DATABASE_URL")
+DATABASES['default'] = dj_database_url.parse(database_url)
+# DATABASES['default'] = dj_database_url.parse("postgresql://xuyen:muYCBPILLxeShUoj4VmBHPLj5D3gebmH@dpg-cu552kij1k6c73alaah0-a.singapore-postgres.render.com/ecomdata_mslg")
+
+
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -155,9 +143,9 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'thexuyen176@gmail.com'  # Thay bằng email của bạn
-EMAIL_HOST_PASSWORD = '0107asdf'  # Mật khẩu của email
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'thexuyen176@gmail.com'  # Thay bằng email của bạn
+# EMAIL_HOST_PASSWORD = '0107asdf'  # Mật khẩu của email
