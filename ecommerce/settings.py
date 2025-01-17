@@ -76,16 +76,37 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
 # Database
+#==============may==============
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ecomdata',  # Tên database của bạn
+#         'USER': 'postgres',      # Tên user
+#         'PASSWORD': '010701',  # Mật khẩu mới
+#         'HOST': 'localhost',  # Hoặc IP của database
+#         'PORT': '5432',       # Port mặc định PostgreSQL
+#     }
+# }
+# ==============deloy==================
+import os
+from urllib.parse import urlparse
+
+# Lấy DATABASE_URL từ biến môi trường (hoặc cấu hình trực tiếp)
+# DATABASE_URL = os.getenv('DATABASE_URL', 'postgres://xuyen:muYCBPILLxeShUoj4VmBHPLj5D3gebmH@dpg-cu552kij1k6c73alaah0-a:5432/ecomdata_mslg')
+
+# Phân tích DATABASE_URL để lấy thông tin kết nối
+# url = urlparse(DATABASE_URL)
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecomdata',  # Tên database của bạn
-        'USER': 'postgres',      # Tên user
-        'PASSWORD': '010701',  # Mật khẩu mới
-        'HOST': 'localhost',  # Hoặc IP của database
-        'PORT': '5432',       # Port mặc định PostgreSQL
+        'NAME': 'ecomdata_mslg',  # Tên database
+        'USER': 'xuyen',  # Tên người dùng
+        'PASSWORD': 'muYCBPILLxeShUoj4VmBHPLj5D3gebmH',  # Thay thế bằng mật khẩu bạn nhận từ Render
+        'HOST': 'dpg-cu552kij1k6c73alaah0-a',  # Tên máy chủ
+        'PORT': '5432',  # Cổng kết nối
     }
 }
 # Password validation
