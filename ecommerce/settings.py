@@ -21,14 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure--f2k+48^i71d4t6!&yc!@l%upqfvx(iii^=266+zi^(*n^zddb'
+SECRET_KEY = 'django-insecure--f2k+48^i71d4t6!&yc!@l%upqfvx(iii^=266+zi^(*n^zddb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-# ALLOWED_HOSTS = []
-SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.environ.get("DEBUG", "False").lower() == "True"
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+DEBUG = True
+ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -93,9 +91,8 @@ DATABASES = {
     }
 }
 # ==============deloy==================
-database_url = os.environ.get("DATABASE_URL")
-DATABASES['default'] = dj_database_url.parse(database_url)
-# DATABASES['default'] = dj_database_url.parse("postgresql://xuyen:muYCBPILLxeShUoj4VmBHPLj5D3gebmH@dpg-cu552kij1k6c73alaah0-a.singapore-postgres.render.com/ecomdata_mslg")
+
+DATABASES['default'] = dj_database_url.parse("postgresql://xuyen:muYCBPILLxeShUoj4VmBHPLj5D3gebmH@dpg-cu552kij1k6c73alaah0-a.singapore-postgres.render.com/ecomdata_mslg")
 
 
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
